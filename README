@@ -1,0 +1,28 @@
+You can customize the directory used by AlterEgo and other options that 
+affect its compilation by editing the file "config.h"
+
+Running "make" and "make install" with no changes will create /sbin/alterego 
+with a default root of /i386 and with the SMALL option disabled.
+
+To throw out all message text and reduce the size slightly, uncomment the 
+entry for "#define SMALL" in config.h
+
+If you wish to install AlterEgo to a different location, use DESTDIR:
+
+make DESTDIR=/packages/staging install
+
+Then, make the symlinks for the programs you need; for example, running:
+
+ln -s /usr/bin/alterego /usr/bin/firefox
+
+will redirect /usr/bin/firefox to transparently do the equivalent of:
+
+chroot /i386
+/usr/bin/firefox
+
+
+COPYRIGHT
+---------
+AlterEgo is Copyright (C) by Jody Bruchon, and is distributed under the terms 
+of the GNU General Public License Version 3.
+
