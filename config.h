@@ -1,8 +1,5 @@
 /* Set the desired AlterEgo root folder */
-#ifndef ROOT
-#define ROOT "/x64"
+#ifndef DEFAULTROOT
+#define DEFAULTROOT "/i386"
 #endif
-
-/* Uncomment to eliminate all message text */
-/* #define SMALL */
 

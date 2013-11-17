@@ -2,10 +2,7 @@ You can customize the directory used by AlterEgo and other options that
 affect its compilation by editing the file "config.h"
 
 Running "make" and "make install" with no changes will create /sbin/alterego 
-with a default root of /i386 and with the SMALL option disabled.
-
-To throw out all message text and reduce the size slightly, uncomment the 
-entry for "#define SMALL" in config.h
+with a default root of /i386
 
 If you wish to install AlterEgo to a different location, use DESTDIR:
 
