@@ -17,5 +17,5 @@ uninstall:
 	rm -f $$DESTDIR/sbin/alterego $$DESTDIR/usr/man/man1/alterego.1.gz
 
 clean:
-	rm -f alterego alterego.1.gz
+	rm -f alterego alterego.1.gz *~ *.o
 
