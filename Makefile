@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Os -pipe -fomit-frame-pointer -s
-LDFLAGS=-Wl,--hash-style=gnu
+CFLAGS=-O2 -pipe -Wall -Wextra -Wstrict-aliasing=2 -Wcast-align -fstrict-aliasing
+LDFLAGS=-Wl,-O1
 
 all: alterego manual
 

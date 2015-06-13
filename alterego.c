@@ -25,14 +25,76 @@
 
 #include "config.h"
 
-const char program_version[] = "1.1";
+const char program_version[] = "1.2";
 
 #ifndef DEFAULTROOT
 #define DEFAULTROOT "/i386"
 #endif
 
-int usage(char **argv, int status) {
-	/* Program usage */
+int main(int argc, char **argv) {
+	char prog[PATH_MAX];
+	static char rootdir[PATH_MAX] = DEFAULTROOT;
+	char *p;	/* for parsing options */
+	int status = 0;
+
+	/* Behave differently if invoked as our own name */
+	if (strncmp(basename(prog), "alterego", PATH_MAX) == 0) {
+		if (argc < 2) {
+			fprintf(stderr, "No parameters specified.\n");
+			status = 255; goto usage;
+		}
+
+		/* Parse command-line options if present */
+		if (*argv[1] == '-') {
+			p = argv[1];
+			p++;
+			switch (*p) {
+			case '\0':
+				fprintf(stderr, "You must specify an option after the '-'\n");
+				status = 255; goto usage;
+			case 'r':
+				if (argc < 4) {
+					fprintf(stderr, "You must specify the root after the -r switch\n");
+					status = 255; goto usage;
+				}
+				strncpy(rootdir, argv[2], PATH_MAX);
+				break;
+			}
+		}
+	}
+
+	/* Use absolute path if slashes used in invocation */
+	if (strchr(argv[0], '/') != NULL) {
+		getcwd(prog, PATH_MAX);
+		strcat(prog, "/");
+		strcat(prog, argv[0]);
+	} else {
+		strcpy(prog, argv[0]);
+	}
+
+	if (chdir(rootdir)) {
+		fprintf(stderr, "Change directory to %s failed.\n", rootdir);
+		status = 1; goto usage;
+	}
+	if (chroot(rootdir)) {
+		fprintf(stderr, "Change root to %s failed.\n", rootdir);
+		status = 2; goto usage;
+	}
+	if (seteuid(getuid())) {
+		fprintf(stderr, "seteuid() to the current user ID failed.\n");
+		status = 3; goto usage;
+	}
+
+	if (execvp(prog,argv)) {
+		fprintf(stderr, "Could not execute %s in %s\n", prog, rootdir);
+		status = 4; goto usage;
+	}
+
+	/* Fall through - this should never be reached */
+	fprintf(stderr, "This message indicated a bug, please report it.\n");
+	status = 128;
+
+usage:
 	printf("\nAlterEgo version %s by Jody Lee Bruchon <jody@c02ware.com>\n", program_version);
 	printf("This copy uses the following default root path: %s\n\n", DEFAULTROOT);
 	printf(
@@ -48,65 +110,5 @@ int usage(char **argv, int status) {
 	"AlterEgo, i.e. ln -s /usr/bin/alterego /usr/bin/firefox\n\n"
 	);
 	exit(status);
-}
-
-int main(int argc, char **argv) {
-	char prog[PATH_MAX];
-	char temp[PATH_MAX];
-	char rootdir[PATH_MAX] = DEFAULTROOT;
-	char *p;	/* for parsing options */
-	int oc;		/* which option is the program to exec? */
-
-	strncpy(temp, argv[0], PATH_MAX);
-	if (strncmp(basename(prog), "alterego", PATH_MAX) == 0) {
-		if (argc < 2) {
-			fprintf(stderr, "No parameters specified.\n");
-			usage(argv, 255);
-		}
-
-		/* Parse command-line options if present */
-		if (*argv[1] == '-') {
-			p = argv[1];
-			p++;
-			if (*p == '\0') {
-				fprintf(stderr, "You must specify an option after the '-'\n");
-				usage(argv,255);
-			}
-			if (*p == 'r') {
-				if (argc < 4) {
-					fprintf(stderr, "");
-					usage(argv, 255);
-				}
-				strncpy(rootdir, argv[2], PATH_MAX);
-			}
-		}
-	}
-
-	/* Use absolute path if slashes used in invocation */
-	if (strchr(argv[0], '/') != NULL) {
-		getcwd(prog, PATH_MAX);
-		strcat(prog, "/");
-		strcat(prog, argv[0]);
-	} else {
-		strcpy(prog, argv[0]);
-	}
-
-	if (chdir(rootdir)) {
-		printf("Change directory to %s failed.\n", rootdir);
-		usage(argv, 1);
-	}
-	if (chroot(rootdir)) {
-		printf("Change root to %s failed.\n", rootdir);
-		usage(argv, 2);
-	}
-	if (seteuid(getuid())) {
-		printf("seteuid() to the current user ID failed.\n");
-		usage(argv, 3);
-	}
-
-	if (execvp(prog,argv)) {
-		printf("Could not execute %s in %s\n", prog, rootdir);
-	}
-	usage(argv, 4);
 }
 
