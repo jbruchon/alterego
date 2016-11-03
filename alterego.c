@@ -49,8 +49,9 @@ int main(int argc, char **argv) {
 			p = argv[1];
 			p++;
 			switch (*p) {
+			default:
 			case '\0':
-				fprintf(stderr, "You must specify an option after the '-'\n");
+				fprintf(stderr, "You must specify a valid option after the '-'\n");
 				status = 255; goto usage;
 			case 'r':
 				if (argc < 4) {

@@ -1,5 +1,7 @@
 CC=gcc
-CFLAGS=-O2 -pipe -Wall -Wextra -Wstrict-aliasing=2 -Wcast-align -fstrict-aliasing
+CFLAGS=-O2 -pipe -fstrict-aliasing
+CFLAGS += -Wall -Wextra -Wwrite-strings -Wcast-align -Wstrict-aliasing -pedantic -Wstrict-overflow -Wstrict-prototypes -Wpointer-arith -Wundef
+CFLAGS += -Wshadow -Wfloat-equal -Wstrict-overflow=5 -Waggregate-return -Wcast-qual -Wswitch-default -Wswitch-enum -Wconversion -Wunreachable-code -Wformat=2 -Winit-self
 LDFLAGS=-Wl,-O1
 
 all: alterego manual
