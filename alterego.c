@@ -1,6 +1,6 @@
 /*
   AlterEgo: seamless integration of chroot applications
-  Copyright (C) 2012, 2013 by Jody Lee Bruchon <jody@c02ware.com>
+  Copyright (C) 2012-2018 by Jody Lee Bruchon <jody@jodybruchon.com>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 	status = 128;
 
 usage:
-	printf("\nAlterEgo version %s by Jody Lee Bruchon <jody@c02ware.com>\n", program_version);
+	printf("\nAlterEgo version %s by Jody Lee Bruchon <jody@jodybruchon.com>\n", program_version);
 	printf("This copy uses the following default root path: %s\n\n", DEFAULTROOT);
 	printf(
 	"This program attempts to execute a program with the same name\n"
